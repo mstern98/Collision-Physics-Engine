@@ -28,7 +28,13 @@ Vector* initVector(float x, float y, float z);
 
 int scale(const float size, Vector* v);
 
-int rotate(const float angle, Vector* v);
+Vector* rotate(const float angle, Vector* v);
+Vector* rotateTo(const Vector* to, Vector* v);
+float dotProduct(const Vector* c, Vector* v);
+Vector* crossProduct(const Vector* c, const Vector* v);
+Vector* translate(const Vector* t, Vector* v);
+Vector* normVector(const Vector* v);
+float norm(const Vector* v);
 
 Matrix* rot_x(const float* alpha);
 Matrix* rot_y(const float* beta);

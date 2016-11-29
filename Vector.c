@@ -106,6 +106,78 @@ Matrix* rot_z(const float* gamma)
 	return m;
 }
 
+Vector* rotateTo(const Vector* to, Vector* v)
+{
+	Euler* e = malloc(sizeof(Euler*));
+	
+	float norm_to = norm(to);
+	float norm_x = norm(x);
+	
+	e->alpha = acos(to->x / norm_to) - acos(v->x / norm_x);
+	e->beta = acos(to->y / norm_to) - acos(v->y / norm_x);
+	e->gammma = acos(to->z / norm_to) - acos(v->z / norm_x);
+	
+	return rotate(e, v);
+}
+
+float dotProduct(const Vector* c, Vector* v)
+{
+	return (c->x * v->x) + (c->y * v->y) + (c->z * v->z);
+}
+
+Vector* crossProduct(const Vector* c, const Vector* v)
+{
+	Vector* tmp = malloc(sizeof(Vector*));
+	
+	tmp->x = (c->y * v->z) - (c->z * v->y);
+	tmp->y = (c->x * v->z) - (c->z * v->x);
+	tmp->z = (c->x * v->y) - (c->y * v->x);
+	
+	return tmp;
+}
+
+Vector* translate(const Vector* t, Vector* v)
+{
+	v->x = t->x + v->x;
+	v->y = t->y + v->y;
+	v->z = t->z + v->z;
+	
+	return v;
+}
+
+Vector* normVector(const Vector* v)
+{
+	Vector* tmp = malloc(sizeof(Vector*));
+	
+	tmp->x = -1/v->x;
+	tmp->y = -1/v->y;
+	tmp->z = -1/v->z;
+	
+	return tmp;
+}
+
+float norm(const Vector* v)
+{
+	return sqrt(pow(v->x, 2) + pow(v->y, 2) + pow(v->z, 2));
+}	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
