@@ -9,8 +9,8 @@
 typedef struct LinkedList 
 {
 	Object* obj; /*!< The object stored in the node. */
-	Node* parent; /*!< The parent node. */
-	Node* next; /*!< The next node. */
+	LinkedList* parent; /*!< The parent node. */
+	LinkedList* next; /*!< The next node. */
 } LinkedList;
 
 /*! add. */
