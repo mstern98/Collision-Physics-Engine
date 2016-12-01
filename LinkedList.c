@@ -2,7 +2,7 @@
 
 bool add(const Object* obj, LinkedList* list)
 {
-	if (list->obj == NULL || list == NULL) 
+	if (list->obj == NULL) 
 	{
 		list = malloc(sizeof(LinkedList));
 		list->obj = malloc(sizeof(Object*));
@@ -23,7 +23,7 @@ bool add(const Object* obj, LinkedList* list)
 
 Object* delete(const Object* obj, LinkedList* list)
 {
-	if (list->obj == NULL || list == NULL)
+	if (list->obj == NULL)
 		return NULL;
 	if (equals(list->obj, obj))
 	{
