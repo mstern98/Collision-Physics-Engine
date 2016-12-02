@@ -32,18 +32,25 @@ CylinderCollider* cylinder_init(const float r, const float h, const Object* obj)
 	tmp->height = h;
 	
 	tmp->reference = obj->reference;
+	
+	return tmp;
 }
 
 MeshCollider* mesh_init()
 {
 	//TODO: IDK
+	MeshCollider* tmp = malloc(sizeof(MeshCollider*));
+	
+	return tmp;
 }
 
 Quadrant* box_quad(BoxCollider* box, const Plane* p1, const Plane* p2)
 {
+	Quadrant* tmp = malloc(sizeof(Quadrant*));
+	
 	Vector** points = calloc(sizeof(Vector*), 8);
-	float dist_to_plane_one[8];
-	float dist_to_plane_two[8];
+//	float dist_to_plane_one[8];
+//	float dist_to_plane_two[8];
 
 	points[0] = box->reference;
 	points[1] = vector_add(box->reference, vector_init(box->length, 0.0f, 0.0f));
@@ -52,32 +59,41 @@ Quadrant* box_quad(BoxCollider* box, const Plane* p1, const Plane* p2)
 	points[4] = vector_add(box->reference, vector_init(0.0f, 0.0f, box->height));
 	points[5] = vector_add(box->reference, vector_init(box->length, 0.0f, box->height));
 	points[6] = vector_add(box->reference, vector_init(box->length, box->width, box->height));
-	points[7] = vector_add(box->reference, vector_init(0.0f, box->width, box-height));
+	points[7] = vector_add(box->reference, vector_init(0.0f, box->width, box->height));
 
 	// TODO: check if a point is zero, or if two points are positive and negative to choose quadrants
 		
-	
+	return tmp;
 }
 Quadrant* cap_quad(CapsuleCollider* cap, const Plane* p1, const Plane* p2)
 {
+	Quadrant* tmp = malloc(sizeof(Quadrant*));
+	
+	return tmp;
 }
 Quadrant* cylinder_quad(CylinderCollider* cyl, const Plane* p1, const Plane* p2)
 {
+	Quadrant* tmp = malloc(sizeof(Quadrant*));
+	
+	return tmp;
 }
 Quadrant* mesh_quad(MeshCollider* mesh, const Plane* p1, const Plane* p2)
 {
 	//TODO: IDK
+	Quadrant* tmp = malloc(sizeof(Quadrant*));
+	
+	return tmp;
 }
 
 void box_set_ref(BoxCollider* box, const Object* obj)
 {
 	box->reference = obj->reference;
 }
-void cap_set_center(CapsuleCollider* cap, const Object* ob)
+void cap_set_center(CapsuleCollider* cap, const Object* obj)
 {
 	cap->center = obj->center;
 }
-void cylinder_set_ref(CylinderCollider* cyl, const Object* ob)
+void cylinder_set_ref(CylinderCollider* cyl, const Object* obj)
 {
 	cyl->reference = obj->reference;
 }

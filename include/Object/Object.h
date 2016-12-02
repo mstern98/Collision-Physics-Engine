@@ -17,6 +17,9 @@ typedef struct Object
 	const char* name;
 	// store the position of the object as an array of vectors
 	Vector* position;
+    
+    Vector* center;
+    Vector* reference;
 	
 } Object;
 
