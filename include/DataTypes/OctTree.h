@@ -1,41 +1,14 @@
-/*
- * =====================================================================================
- *
- *       Filename:  OctTree.h
- *
- *    Description:  OctTree header file
- *
- *        Version:  1.0
- *        Created:  11/28/2016 03:26:24 PM
- *       Revision:  none
- *       Compiler:  gcc
- *
- *         Author:  YOUR NAME (), 
- *   Organization:  
- *
- * =====================================================================================
- */
+#include <stdlib.h>
+#include "../../include/Object/Object.h"
 
-#ifndef Oct_Tree
-#define Oct_Tree
+#ifndef OCT_TREE
+#define OCT_TREE
 
-void init(const Object* obj);
-bool add(const Object* obj);
-Object* delete(const Object* obj);
-bool search(const Object* obj);
 
-typedef struct Node
-{	
-	Node* left;
-	Node* right;
-	typedef struct Quad 
-	{
-		Quad* one;
-		Quad* two;
-		Quad* three;
-		Quad* four;
-	} Quad;
-} Node;
+void oct_init(const Object* obj);
+int oct_add(const Object* obj);
+Object* oct_delete(Object* obj);
+int oct_search(const Object* obj);
 
 #endif
 

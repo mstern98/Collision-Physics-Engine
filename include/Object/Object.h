@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
-#include "Vector.h"
+#include "../../include/Object/Vector.h"
 
 // TODO: work on commenting
 // id: the ID of the object
@@ -11,16 +11,16 @@ typedef struct Object
 {
 	int hash_code;
 	int nv;
-	char* name;
+	const char* name;
 	// store the position of the object as an array of vectors
 	Vector* position;
 	
 } Object;
 
-Object* initObject(int nv, int hash_code);
+Object* obj_init(int hash_code, int nv, struct Vector* v[nv]);
 
 int hashCode(Object* obj);
 
-bool equals(Object* one, Object* two);
+int equals(Object* one, Object* two);
 
 

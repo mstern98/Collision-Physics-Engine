@@ -1,13 +1,13 @@
-#include "LinkedList.h"
+#include "../../include/DataTypes/LinkedList.h"
 
-bool add(const Object* obj, LinkedList* list)
+int ll_add(Object* obj, LinkedList* list)
 {
 	if (list->obj == NULL) 
 	{
 		list = malloc(sizeof(LinkedList));
 		list->obj = malloc(sizeof(Object*));
 		list->obj = obj;
-		return true;
+		return 1;
 	}
 	
 	if (list->next == NULL) 
@@ -15,13 +15,13 @@ bool add(const Object* obj, LinkedList* list)
 		list->next = malloc(sizeof(LinkedList));
 		list->next->obj = malloc(sizeof(Object*));
 		list->next->obj = obj;
-		return true;
+		return 1;
 	}
 	else 
-		return add(obj, list->next);
+		return ll_add(obj, list->next);
 }
 
-Object* delete(const Object* obj, LinkedList* list)
+Object* ll_delete(const Object* obj, LinkedList* list)
 {
 	if (list->obj == NULL)
 		return NULL;
@@ -33,10 +33,10 @@ Object* delete(const Object* obj, LinkedList* list)
 		return temp;
 	}
 	else
-		return delete(obj, list->next);
+		return ll_delete(obj, list->next);
 }
 
-LinkedList* search(const Object* obj, LinkedList* list)
+LinkedList* ll_search(const Object* obj, LinkedList* list)
 {
 	LinkedList* search = list;
 	while(search->next != NULL) 

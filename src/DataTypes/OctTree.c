@@ -1,44 +1,23 @@
-/*
- * =====================================================================================
- *
- *       Filename:  OctTree.c
- *
- *    Description:  OctTree used for storing the quadrants of objects
- *
- *        Version:  1.0
- *        Created:  11/28/2016 03:06:34 PM
- *       Revision:  none
- *       Compiler:  gcc
- *
- *         Author:  YOUR NAME (), 
- *   Organization:  
- *
- * =====================================================================================
- */
-#include <stdlib.h>
-#include <stdbool.h>
-#include "OctTree.h"
+#include "../../include/DataTypes/OctTree.h"
 
-Node* root = NULL;
-
-void init(const Object* obj)
+void oct_init(const Object* obj)
 {
 
 }
 
-bool add(const Object* obj) 
+int oct_add(const Object* obj) 
 {
-	return true;
+	return 1;
 }
 
-Object delete(const Object* obj) 
+Object* oct_delete(Object* obj) 
 {
-	return *obj;
+	return obj;
 }
 
-bool search(const Object* obj) 
+int oct_search(const Object* obj) 
 {
-	return true;
+	return 1;
 }
 
 

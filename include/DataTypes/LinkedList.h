@@ -1,4 +1,4 @@
-#include "Object.h"
+#include "../../include/Object/Object.h"
 #include <stdbool.h>
 
 #ifndef LINKED_LIST
@@ -9,8 +9,8 @@
 typedef struct LinkedList 
 {
 	Object* obj; /*!< The object stored in the node. */
-	LinkedList* parent; /*!< The parent node. */
-	LinkedList* next; /*!< The next node. */
+	struct LinkedList* parent; /*!< The parent node. */
+	struct LinkedList* next; /*!< The next node. */
 } LinkedList;
 
 /*! add. */
@@ -18,10 +18,10 @@ typedef struct LinkedList
 * \param obj The object being added to the list.
 * \param list The list obj is being added to. 
 */
-bool add(const Object* obj, LinkedList* list);
+int ll_add(Object* obj, LinkedList* list);
 
 
-Object* delete(const Object* obj, LinkedList* list);
-LinkedList* search(const Object* obj, LinkedList* list);
+Object* ll_delete(const Object* obj, LinkedList* list);
+LinkedList* ll_search(const Object* obj, LinkedList* list);
 
 #endif

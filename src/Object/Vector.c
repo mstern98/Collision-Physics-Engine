@@ -1,16 +1,18 @@
-#include "Vector.h"
+#include "../../include/Object/Vector.h"
 
-Vector* initVector(float x, float y, float z)
+Vector* vector_init(float x, float y, float z)
 {
-	Vector* vec = malloc(sizeof(Vector))
+	Vector* vec = malloc(sizeof(Vector*));
 	
 	vec->x = x;
 	vec->y = y;
 	vec->z = z;
+	
+	return vec;
 }
 
 
-Vector* scale(float size, Vector* v) 
+Vector* scale(const float size, Vector* v) 
 {
 	v->x *= size;
 	v->y *= size;
@@ -30,7 +32,7 @@ Vector* multiply(const Matrix* m, Vector* v)
 	m->col_2-> z * v->z;
 	
 	temp->z = m->col_3->x * v->x + m->col_3->y * v->y + 
-	m->col_3-> z * v->z;
+	m->col_3->z * v->z;
 	
 	v = temp;
 	free(temp);
@@ -49,59 +51,59 @@ Vector* rotate(const Euler* e, Vector* v)
 	return multiply(z, v);
 }
 
-Matrix* rot_x(const float* alpha)
+Matrix* rot_x(const float alpha)
 {
 	Matrix* m = malloc(sizeof(Matrix*));
 	
-	m->col_1->x = 1;
-	m->col_1->y = 0;
-	m->col_1->z = 0;
+	m->col_1->x = 1.0f;
+	m->col_1->y = 0.0f;
+	m->col_1->z = 0.0f;
 	
-	m->col_2->x = 0;
-	m->col_2->y = cos(alpha);
-	m->col_2->z = sin(alpha);
+	m->col_2->x = 0.0f;
+	m->col_2->y = (float) cos((double) alpha);
+	m->col_2->z = (float) sin((double) alpha);
 	
-	m->col_3->x = 0;
-	m->col_3->y = -1 * sin(alpha);
-	m->col_3->z = cos(alpha);
+	m->col_3->x = 0.0f;
+	m->col_3->y = -1.0f * sin((double) alpha);
+	m->col_3->z = (float) cos((double) alpha);
 
 	return m;
 }
 	
 	
-Matrix* rot_y(const float* beta)
+Matrix* rot_y(const float beta)
 {
 	Matrix* m = malloc(sizeof(Matrix*));
 	
-	m->col_1->x = cos(beta);
-	m->col_1->y = 0;
-	m->col_1->z = -1 * sin(beta);
+	m->col_1->x = (float) cos((double) beta);
+	m->col_1->y = 0.0f;
+	m->col_1->z = -1.0f * sin((double) beta);
 	
-	m->col_2->x = 0;
-	m->col_2->y = 1;
-	m->col_2->z = 0;
+	m->col_2->x = 0.0f;
+	m->col_2->y = 1.0f;
+	m->col_2->z = 0.0f;
 	
-	m->col_3->x = sin(beta);
-	m->col_3->y = 0;
-	m->col_3->z = cos(beta);
+	m->col_3->x = (float) sin((double) beta);
+	m->col_3->y = 0.0f;
+	m->col_3->z = (float) cos((double) beta);
 
 	return m;
 }
-Matrix* rot_z(const float* gamma)
+Matrix* rot_z(const float gamma)
 {
 	Matrix* m = malloc(sizeof(Matrix*));
 	
-	m->col_1->x = cos(gamma);
-	m->col_1->y = sin(gamma);
-	m->col_1->z = 0;
+	m->col_1->x = (float) cos((double) gamma);
+	m->col_1->y = (float) sin((double) gamma);
+	m->col_1->z = 0.0f;
 	
-	m->col_2->x = -1 * sin(gamma);
-	m->col_2->y = cos(gamma);
-	m->col_2->z = 0;
+	m->col_2->x = -1.0f * sin((double) gamma);
+	m->col_2->y = (float) cos((double) gamma);
+	m->col_2->z = 0.0f;
 	
-	m->col_3->x = 0;
-	m->col_3->y = 0;
-	m->col_3->z = 1;
+	m->col_3->x = 0.0f;
+	m->col_3->y = 0.0f;
+	m->col_3->z = 1.0f;
 
 	return m;
 }
@@ -111,11 +113,11 @@ Vector* rotateTo(const Vector* to, Vector* v)
 	Euler* e = malloc(sizeof(Euler*));
 	
 	float norm_to = norm(to);
-	float norm_x = norm(x);
+	float norm_v = norm(v);
 	
-	e->alpha = acos(to->x / norm_to) - acos(v->x / norm_x);
-	e->beta = acos(to->y / norm_to) - acos(v->y / norm_x);
-	e->gammma = acos(to->z / norm_to) - acos(v->z / norm_x);
+	e->alpha = acos(to->x / norm_to) - acos(v->x / norm_v);
+	e->beta = acos(to->y / norm_to) - acos(v->y / norm_v);
+	e->gamma = acos(to->z / norm_to) - acos(v->z / norm_v);
 	
 	return rotate(e, v);
 }
