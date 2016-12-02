@@ -2,6 +2,9 @@
 #include <string.h>
 #include "../../include/Object/Vector.h"
 
+#ifndef OBJECT
+#define OBJECT
+
 // TODO: work on commenting
 // id: the ID of the object
 
@@ -22,5 +25,7 @@ Object* obj_init(int hash_code, int nv, struct Vector* v[nv]);
 int hashCode(Object* obj);
 
 int equals(Object* one, Object* two);
+
+#endif
 
 

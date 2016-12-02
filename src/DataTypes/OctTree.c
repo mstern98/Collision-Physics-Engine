@@ -1,6 +1,6 @@
 #include "../../include/DataTypes/OctTree.h"
 
-void oct_init(const Object* obj)
+void oct_init(const Object** obj)
 {
 
 }

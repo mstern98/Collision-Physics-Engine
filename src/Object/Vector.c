@@ -11,8 +11,29 @@ Vector* vector_init(float x, float y, float z)
 	return vec;
 }
 
+Plane* plane_init(Vector* perpendicular, Vector* a, Vector* b)
+{
+	Plane* tmp = malloc(sizeof(Plane*));
+	
+	tmp->perpendicular = perpendicular;
+	tmp->a = a;
+	tmp->b = b;
+	
+	return tmp;
+}
 
-Vector* scale(const float size, Vector* v) 
+Euler* euler_init(float alpha, float beta, float gamma)
+{
+	Euler* tmp = malloc(sizeof(Euler*));
+
+	tmp->alpha = alpha;
+	tmp->beta = beta;
+	tmp->gamma = gamma;
+	
+	return tmp;
+}
+
+Vector* vector_multiply(const float size, Vector* v) 
 {
 	v->x *= size;
 	v->y *= size;
@@ -21,7 +42,7 @@ Vector* scale(const float size, Vector* v)
 	return v;
 }
 
-Vector* multiply(const Matrix* m, Vector* v)
+Vector* vm_multiply(const Matrix* m, Vector* v)
 {
 	Vector* temp = malloc(sizeof(Vector*));
 	
@@ -40,18 +61,18 @@ Vector* multiply(const Matrix* m, Vector* v)
 	return v;
 }
 
-Vector* rotate(const Euler* e, Vector* v)
+Vector* vector_rotate(const Euler* e, Vector* v)
 {
-	Matrix* x = rot_x(e->alpha);
-	Matrix* y = rot_y(e->beta);
-	Matrix* z = rot_z(e->gamma);
+	Matrix* x = mat_rot_x(e->alpha);
+	Matrix* y = mat_rot_y(e->beta);
+	Matrix* z = mat_rot_z(e->gamma);
 	
-	multiply(x, v);
-	multiply(y, v);
-	return multiply(z, v);
+	vm_multiply(x, v);
+	vm_multiply(y, v);
+	return vm_multiply(z, v);
 }
 
-Matrix* rot_x(const float alpha)
+Matrix* mat_rot_x(const float alpha)
 {
 	Matrix* m = malloc(sizeof(Matrix*));
 	
@@ -71,7 +92,7 @@ Matrix* rot_x(const float alpha)
 }
 	
 	
-Matrix* rot_y(const float beta)
+Matrix* mat_rot_y(const float beta)
 {
 	Matrix* m = malloc(sizeof(Matrix*));
 	
@@ -89,7 +110,7 @@ Matrix* rot_y(const float beta)
 
 	return m;
 }
-Matrix* rot_z(const float gamma)
+Matrix* mat_rot_z(const float gamma)
 {
 	Matrix* m = malloc(sizeof(Matrix*));
 	
@@ -108,7 +129,7 @@ Matrix* rot_z(const float gamma)
 	return m;
 }
 
-Vector* rotateTo(const Vector* to, Vector* v)
+Vector* vector_rotateTo(const Vector* to, Vector* v)
 {
 	Euler* e = malloc(sizeof(Euler*));
 	
@@ -119,7 +140,7 @@ Vector* rotateTo(const Vector* to, Vector* v)
 	e->beta = acos(to->y / norm_to) - acos(v->y / norm_v);
 	e->gamma = acos(to->z / norm_to) - acos(v->z / norm_v);
 	
-	return rotate(e, v);
+	return vector_rotate(e, v);
 }
 
 float dotProduct(const Vector* c, Vector* v)
@@ -138,7 +159,7 @@ Vector* crossProduct(const Vector* c, const Vector* v)
 	return tmp;
 }
 
-Vector* translate(const Vector* t, Vector* v)
+Vector* vector_translate(const Vector* t, Vector* v)
 {
 	v->x = t->x + v->x;
 	v->y = t->y + v->y;
@@ -162,6 +183,32 @@ float norm(const Vector* v)
 {
 	return sqrt(pow(v->x, 2) + pow(v->y, 2) + pow(v->z, 2));
 }	
+
+Vector* vector_add(Vector* a, Vector* b)
+{
+	Vector* tmp = malloc(sizeof(Vector*));
+	
+	tmp->x = a->x + b->x;
+	tmp->y = a->y + b->y;
+	tmp->z = a->z + b->z;
+	
+	return tmp;
+}
+Vector* vector_subtract(Vector* a, Vector* b)
+{
+	Vector* tmp = malloc(sizeof(Vector*));
+	
+	tmp->x = a->x - b->x;
+	tmp->y = a->y - b->y;
+	tmp->z = a->z - b->z;
+	
+	return tmp;
+}
+
+float dist_to_plane(Plane* p, Vector* v)
+{
+	return dotProduct(vector_multiply(1.0f / norm(p->perpendicular), p->perpendicular), vector_subtract(p->a, v));
+}
 
 
 

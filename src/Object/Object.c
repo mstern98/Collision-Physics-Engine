@@ -1,4 +1,3 @@
-
 #include "../../include/Object/Object.h"
 
 Object* obj_init(int hash_code, int nv, struct Vector* v[nv])
