@@ -46,14 +46,14 @@ Vector* vm_multiply(const Matrix* m, Vector* v)
 {
 	Vector* temp = malloc(sizeof(Vector*));
 	
-	temp->x = m->col_1->x * v->x + m->col_1->y * v->y + 
-	m->col_1-> z * v->z;
+	temp->x = m->row_1->x * v->x + m->row_1->y * v->y + 
+	m->row_1-> z * v->z;
 	
-	temp->y = m->col_2->x * v->x + m->col_2->y * v->y + 
-	m->col_2-> z * v->z;
+	temp->y = m->row_2->x * v->x + m->row_2->y * v->y + 
+	m->row_2-> z * v->z;
 	
-	temp->z = m->col_3->x * v->x + m->col_3->y * v->y + 
-	m->col_3->z * v->z;
+	temp->z = m->row_3->x * v->x + m->row_3->y * v->y + 
+	m->row_3->z * v->z;
 	
 	v = temp;
 	free(temp);
@@ -75,18 +75,21 @@ Vector* vector_rotate(const Euler* e, Vector* v)
 Matrix* mat_rot_x(const float alpha)
 {
 	Matrix* m = malloc(sizeof(Matrix*));
+	m->row_1 = malloc(sizeof(Vector*));
+	m->row_2 =malloc(sizeof(Vector*));
+	m->row_3 =malloc(sizeof(Vector*));
 	
-	m->col_1->x = 1.0f;
-	m->col_1->y = 0.0f;
-	m->col_1->z = 0.0f;
+	m->row_1->x = 1.0f;
+	m->row_1->y = 0.0f;
+	m->row_1->z = 0.0f;
 	
-	m->col_2->x = 0.0f;
-	m->col_2->y = (float) cos((double) alpha);
-	m->col_2->z = (float) sin((double) alpha);
+	m->row_2->x = 0.0f;
+	m->row_2->y = (float) cos((double) alpha);
+	m->row_2->z = (float) sin((double) alpha);
 	
-	m->col_3->x = 0.0f;
-	m->col_3->y = -1.0f * sin((double) alpha);
-	m->col_3->z = (float) cos((double) alpha);
+	m->row_3->x = 0.0f;
+	m->row_3->y = -1.0f * sin((double) alpha);
+	m->row_3->z = (float) cos((double) alpha);
 
 	return m;
 }
@@ -95,36 +98,42 @@ Matrix* mat_rot_x(const float alpha)
 Matrix* mat_rot_y(const float beta)
 {
 	Matrix* m = malloc(sizeof(Matrix*));
+	m->row_1 = malloc(sizeof(Vector*));
+	m->row_2 =malloc(sizeof(Vector*));
+	m->row_3 =malloc(sizeof(Vector*));
 	
-	m->col_1->x = (float) cos((double) beta);
-	m->col_1->y = 0.0f;
-	m->col_1->z = -1.0f * sin((double) beta);
+	m->row_1->x = (float) cos((double) beta);
+	m->row_1->y = 0.0f;
+	m->row_1->z = -1.0f * sin((double) beta);
 	
-	m->col_2->x = 0.0f;
-	m->col_2->y = 1.0f;
-	m->col_2->z = 0.0f;
+	m->row_2->x = 0.0f;
+	m->row_2->y = 1.0f;
+	m->row_2->z = 0.0f;
 	
-	m->col_3->x = (float) sin((double) beta);
-	m->col_3->y = 0.0f;
-	m->col_3->z = (float) cos((double) beta);
+	m->row_3->x = (float) sin((double) beta);
+	m->row_3->y = 0.0f;
+	m->row_3->z = (float) cos((double) beta);
 
 	return m;
 }
 Matrix* mat_rot_z(const float gamma)
 {
 	Matrix* m = malloc(sizeof(Matrix*));
+	m->row_1 = malloc(sizeof(Vector*));
+	m->row_2 =malloc(sizeof(Vector*));
+	m->row_3 =malloc(sizeof(Vector*));
 	
-	m->col_1->x = (float) cos((double) gamma);
-	m->col_1->y = (float) sin((double) gamma);
-	m->col_1->z = 0.0f;
+	m->row_1->x = (float) cos((double) gamma);
+	m->row_1->y = (float) sin((double) gamma);
+	m->row_1->z = 0.0f;
 	
-	m->col_2->x = -1.0f * sin((double) gamma);
-	m->col_2->y = (float) cos((double) gamma);
-	m->col_2->z = 0.0f;
+	m->row_2->x = -1.0f * sin((double) gamma);
+	m->row_2->y = (float) cos((double) gamma);
+	m->row_2->z = 0.0f;
 	
-	m->col_3->x = 0.0f;
-	m->col_3->y = 0.0f;
-	m->col_3->z = 1.0f;
+	m->row_3->x = 0.0f;
+	m->row_3->y = 0.0f;
+	m->row_3->z = 1.0f;
 
 	return m;
 }
@@ -205,11 +214,59 @@ Vector* vector_subtract(Vector* a, Vector* b)
 	return tmp;
 }
 
+Vector* vector_projection(Vector* a, Vector* u)
+{
+	return vector_multiply(dotProduct(a, u)/pow(norm(u), 2), u);
+}
+
 float dist_to_plane(Plane* p, Vector* v)
 {
 	return dotProduct(vector_multiply(1.0f / norm(p->perpendicular), p->perpendicular), vector_subtract(p->a, v));
 }
 
+float determinant( Matrix* m) 
+{
+	return (m->row_1->x * ((m->row_2->y * m->row_3->z) - (m->row_3->y * m->row_2->z))) -
+	(m->row_2->x *((m->row_1->y * m->row_3->z) -  (m->row_3->y * m->row_1->x))) +
+	(m->row_1->z * ((m->row_1->y * m->row_2->z) - (m->row_2->y * m->row_1->x)));
+}
+	
+Matrix* transpose(Matrix* m)
+{
+	Matrix* tmp = malloc(sizeof(Matrix*));
+	tmp->row_1 = vector_init(m->row_1->x, m->row_2->x, m->row_3->x);
+	tmp->row_2 = vector_init(m->row_1->y, m->row_2->y, m->row_3->y);
+	tmp->row_3 = vector_init(m->row_1->z, m->row_2->z, m->row_3->z);
+	
+	return tmp;
+}
+
+Matrix* cofactor(Matrix* m)
+{
+	Matrix* tmp = malloc(sizeof(Matrix*));
+	
+	tmp->row_1 = vector_init(((m->row_2->y * m->row_3->z) - (m->row_3->y * m->row_2->z)), -((m->row_1->y * m->row_3->z) - (m->row_3->y * m->row_1->x)), ((m->row_2->x  * m->row_3->y) - (m->row_2->y * m->row_1->x)));
+	tmp->row_2 = vector_init( ( -(m->row_1->y * m->row_3->z) - (m->row_3->y * m->row_1->z)), ((m->row_1->x * m->row_3->z) - (m->row_1->z * m->row_3->x)), -((m->row_1->x * m->row_2->y) - (m->row_1->y * m->row_2->x)));
+	tmp->row_3 = vector_init(((m->row_1->y * m->row_2->z) - (m->row_1->z * m->row_2->x)), -((m->row_1->x * m->row_2->z) - (m->row_1->z * m->row_2->x)), ((m->row_1->x * m->row_2->y) - (m->row_1->y * m->row_2->x)));
+	
+	return tmp;
+}
+	
+Matrix* inverse(Matrix* m)
+{
+	Matrix* tmp = malloc(sizeof(Matrix*));
+	float det = determinant(m);
+	if (m == 0)
+		return NULL;
+
+	return matrix_scalar_muliply(1/det , transpose(cofactor(m)));
+}
+
+
+Vector* line_intersection(Line* a, Line* b);
+Vector* lp_intersection(Line* l, Plane* p);
+Vector* plane_intersection(Plane* a, Plane* b);
+Vector* pl_intersection(Line* l, Vector* v);
 
 
 
