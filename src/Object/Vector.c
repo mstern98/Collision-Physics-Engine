@@ -152,7 +152,7 @@ Vector* vector_rotateTo(const Vector* to, Vector* v)
 	return vector_rotate(e, v);
 }
 
-float dotProduct(const Vector* c, Vector* v)
+float dotProduct(const Vector* c, const  Vector* v)
 {
 	return (c->x * v->x) + (c->y * v->y) + (c->z * v->z);
 }
@@ -193,7 +193,7 @@ float norm(const Vector* v)
 	return sqrt(pow(v->x, 2) + pow(v->y, 2) + pow(v->z, 2));
 }	
 
-Vector* vector_add(Vector* a, Vector* b)
+Vector* vector_add(const Vector* a, const Vector* b)
 {
 	Vector* tmp = malloc(sizeof(Vector*));
 	
@@ -203,7 +203,7 @@ Vector* vector_add(Vector* a, Vector* b)
 	
 	return tmp;
 }
-Vector* vector_subtract(Vector* a, Vector* b)
+Vector* vector_subtract(const Vector* a, const Vector* b)
 {
 	Vector* tmp = malloc(sizeof(Vector*));
 	
@@ -214,9 +214,10 @@ Vector* vector_subtract(Vector* a, Vector* b)
 	return tmp;
 }
 
-Vector* vector_projection(Vector* a, Vector* u)
+Vector* vector_projection(const Vector* a, const Vector* u)
 {
-	return vector_multiply(dotProduct(a, u)/pow(norm(u), 2), u);
+	Vector tmp = *u;
+	return vector_multiply(dotProduct(a, u)/pow(norm(u), 2), &tmp);
 }
 
 float dist_to_plane(Plane* p, Vector* v)
@@ -224,14 +225,14 @@ float dist_to_plane(Plane* p, Vector* v)
 	return dotProduct(vector_multiply(1.0f / norm(p->perpendicular), p->perpendicular), vector_subtract(p->a, v));
 }
 
-float determinant( Matrix* m) 
+float determinant( const Matrix* m) 
 {
 	return (m->row_1->x * ((m->row_2->y * m->row_3->z) - (m->row_3->y * m->row_2->z))) -
 	(m->row_2->x *((m->row_1->y * m->row_3->z) -  (m->row_3->y * m->row_1->x))) +
 	(m->row_1->z * ((m->row_1->y * m->row_2->z) - (m->row_2->y * m->row_1->x)));
 }
 	
-Matrix* transpose(Matrix* m)
+Matrix* transpose(const Matrix* m)
 {
 	Matrix* tmp = malloc(sizeof(Matrix*));
 	tmp->row_1 = vector_init(m->row_1->x, m->row_2->x, m->row_3->x);
@@ -241,7 +242,7 @@ Matrix* transpose(Matrix* m)
 	return tmp;
 }
 
-Matrix* cofactor(Matrix* m)
+Matrix* cofactor(const Matrix* m)
 {
 	Matrix* tmp = malloc(sizeof(Matrix*));
 	
@@ -254,7 +255,6 @@ Matrix* cofactor(Matrix* m)
 	
 Matrix* inverse(Matrix* m)
 {
-	Matrix* tmp = malloc(sizeof(Matrix*));
 	float det = determinant(m);
 	if (m == 0)
 		return NULL;
@@ -262,11 +262,73 @@ Matrix* inverse(Matrix* m)
 	return matrix_scalar_muliply(1/det , transpose(cofactor(m)));
 }
 
+Matrix* matrix_scalar_muliply(const float f, Matrix* m)
+{
+	m->row_1->x = m->row_1->x * f;
+	m->row_1->y= m->row_1->y * f;
+	m->row_1->z = m->row_1->z * f;
+	
+	m->row_2->x = m->row_2->x * f;
+	m->row_2->y= m->row_2->y * f;
+	m->row_2->z = m->row_2->z * f;
+	
+	m->row_3->x = m->row_3->x * f;
+	m->row_3->y= m->row_3->y * f;
+	m->row_3->z = m->row_3->z * f;
+	
+	return m;
+}
+	
+	
+Matrix* matrix_multiply(const Matrix* c, Matrix* m)
+{
+	Matrix* tmp = malloc(sizeof(Matrix*));
+	tmp->row_1 = malloc(sizeof(Vector*));
+	tmp->row_2  = malloc(sizeof(Vector*));
+	tmp->row_3 = malloc(sizeof(Vector*));
+	
+	
+	tmp->row_1->x = c->row_1->x * m->row_1->x + c->row_1->y * m->row_2->x  + c->row_1->z * m->row_3->x;
+	tmp->row_1->y = c->row_1->x * m->row_1->y + c->row_1->y * m->row_2->y  + c->row_1->z * m->row_3->y;
+	tmp->row_1->z = c->row_1->x * m->row_1->z + c->row_1->y * m->row_2->z  + c->row_1->z * m->row_3->z;
+	
+	tmp->row_2->x = c->row_2->x * m->row_1->x + c->row_2->y * m->row_2->x  + c->row_2->z * m->row_3->x;
+	tmp->row_2->y = c->row_2->x * m->row_1->y + c->row_2->y * m->row_2->y  + c->row_2->z * m->row_3->y;
+	tmp->row_2->x = c->row_2->x * m->row_1->z + c->row_2->y * m->row_2->z  + c->row_2->z * m->row_3->z;
 
-Vector* line_intersection(Line* a, Line* b);
-Vector* lp_intersection(Line* l, Plane* p);
-Vector* plane_intersection(Plane* a, Plane* b);
-Vector* pl_intersection(Line* l, Vector* v);
+	tmp->row_3->x = c->row_3->x * m->row_1->x + c->row_3->y * m->row_2->x  + c->row_3->z * m->row_3->x;
+	tmp->row_3->y = c->row_3->x * m->row_1->y + c->row_3->y * m->row_2->y  + c->row_3->z * m->row_3->y;
+	tmp->row_3->x = c->row_3->x * m->row_1->z + c->row_3->y * m->row_2->z  + c->row_3->z * m->row_3->z;
+	
+	m = tmp;
+	
+	free(tmp);
+	
+	return m;
+}
+
+Vector* line_intersection(Line* a, Line* b)
+{
+	
+}
+
+Vector* lp_intersection(Line* l, Plane* p)
+{
+	
+}
+
+Vector* plane_intersection(Plane* a, Plane* b)
+{
+	
+}
+
+Vector* pv_intersection(const Line* l,  const Vector* v)
+{
+	Vector* x = vector_add(v, vector_multiply(-1, l->initial));
+	if (x->x/l->slope->x == x->y/l->slope->y &&  x->y/l->slope->y  == x->z/l->slope->z)
+		return vector_add(vector_multiply(x->x/l->slope->x, l->slope), l->initial);
+	return NULL;
+}
 
 
 

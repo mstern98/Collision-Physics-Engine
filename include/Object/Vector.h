@@ -46,28 +46,30 @@ Line* line_init(Vector* s, Vector* i);
 Vector* vector_multiply(const float size, Vector* v);
 Vector* vector_rotate(const Euler* e, Vector* v);
 Vector* vector_rotateTo(const Vector* to, Vector* v);
-float dotProduct(const Vector* c, Vector* v);
+float dotProduct(const Vector* c, const  Vector* v);
 Vector* crossProduct(const Vector* c, const Vector* v);
 Vector* vector_translate(const Vector* t, Vector* v);
 Vector* normVector(const Vector* v);
-Vector* vector_add(Vector* a, Vector* b);
-Vector* vector_subtract(Vector* a, Vector* b);
-Vector* vector_projection(Vector* a, Vector* u);
-float determinant( Matrix* m);
+Vector* vector_add(const Vector* a, const Vector* b);
+Vector* vector_subtract(const Vector* a, const Vector* b);
+Vector* vector_projection(const Vector* a, const Vector* u);
+float determinant( const Matrix* m);
 float norm(const Vector* v);
 
 Matrix* mat_rot_x(const float alpha);
 Matrix* mat_rot_y(const float beta);
 Matrix* mat_rot_z(const float gamma);
-Matrix* transpose(Matrix* m);
-Matrix* cofactor(Matrix* m);
+Matrix* transpose(const Matrix* m);
+Matrix* cofactor(const Matrix* m);
+Matrix* matrix_scalar_muliply(const float f, Matrix* m);
+Matrix* matrix_multiply(const Matrix* c, Matrix* m);
 
 float dist_to_plane(Plane* p, Vector* v);
 
 Vector* line_intersection(Line* a, Line* b);
 Vector* lp_intersection(Line* l, Plane* p);
 Vector* plane_intersection(Plane* a, Plane* b);
-Vector* pl_intersection(Line* l, Vector* v);
+Vector* pv_intersection(const Line* l,  const Vector* v);
 
 
 #endif
