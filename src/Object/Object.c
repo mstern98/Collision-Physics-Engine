@@ -1,12 +1,14 @@
 #include "../../include/Object/Object.h"
 
-Object* obj_init(int hash_code, int nv, struct Vector* v[nv])
+Object* obj_init(char** name, int nv, struct Vector* v[nv])
 {
 	Object* obj = malloc(sizeof(Object));
 	
+	strcpy(obj->name, name); 
 	obj->hash_code = hashCode(obj);
 	obj->nv = nv;
 	obj->position = calloc(nv, sizeof(Vector));
+	memcpy(obj->position, v, sizeof(v));
 
 	return obj;
 }

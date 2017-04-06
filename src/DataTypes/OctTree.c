@@ -1,8 +1,14 @@
 #include "../../include/DataTypes/OctTree.h"
 
-void oct_init(const Object** obj)
+OctTree* oct_init(Hashmap* h)
 {
-
+	OctTree* tmp = malloc(sizeof(OctTree*));
+	
+	memcpy(tmp->data, h, sizeof(h));
+	
+	tmp->children = calloc(sizeof(OctTree*), 8);
+	
+	return tmp;
 }
 
 int oct_add(const Object* obj) 

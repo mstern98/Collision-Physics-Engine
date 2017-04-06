@@ -1,31 +1,34 @@
 #include "../../include/DataTypes/Hashmap.h"
 
-void init()
+Hashmap* hash_init()
 {
-	elements = calloc(sizeof(LinkedList*), HASH_SIZE);
+	Hashmap* tmp = malloc(sizeof(Hashmap*));
+	tmp->elements = calloc(sizeof(LinkedList*), HASH_SIZE);
+	
+	return tmp;
 }
 
-int hash_add(const Object* obj)
+int hash_add(const Object* obj, Hashmap* h)
 {
 	int key = hash(obj);
 	
-	ll_add(obj, &elements[key]);
+	ll_add(obj, h->elements[key]);
 	return 1;
 }
 
-Object* hash_delete(const Object* obj)
+Object* hash_delete(const Object* obj, Hashmap* h)
 {
 	int key = hash(obj);
 	
-	return ll_delete(obj, &elements[key]);
+	return ll_delete(obj, h->elements[key]);
 }
 
-LinkedList* hash_search(const Object* obj)
+LinkedList* hash_search(const Object* obj, Hashmap* h)
 {
 	int key = hash(obj);
-	if (&elements[key] == NULL)
+	if (h->elements[key] == NULL)
 		return NULL;
-	return ll_search(obj, &elements[key]);
+	return ll_search(obj, h->elements[key]);
 }
 int hash(const Object* obj)
 {

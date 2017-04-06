@@ -220,6 +220,16 @@ Vector* vector_projection(const Vector* a, const Vector* u)
 	return vector_multiply(dotProduct(a, u)/pow(norm(u), 2), &tmp);
 }
 
+int vector_equals(Vector* a, Vector* b)
+{
+	return (nearlyEqual(a->x, b->x, EPSILON) && nearlyEqual(a->y, b->y, EPSILON) && nearlyEqual(a->z, b->z, EPSILON));
+}
+
+Vector* invertNormal(Vector* a)
+{
+	return vector_init(-a->x, -a->y, -a->z);
+}
+
 float dist_to_plane(Plane* p, Vector* v)
 {
 	return dotProduct(vector_multiply(1.0f / norm(p->perpendicular), p->perpendicular), vector_subtract(p->a, v));
@@ -307,28 +317,55 @@ Matrix* matrix_multiply(const Matrix* c, Matrix* m)
 	return m;
 }
 
-Vector* line_intersection(Line* a, Line* b)
+int line_intersection(Line* a, Line* b)
+{
+	if (vector_equals(a->initial, b->initial)
+		return 1;
+	
+	if (vector_equals(a->slope, b->slope))
+		return 0;
+	
+	return nearlyEqual(dotProduct(crossProduct(a->slope, b->slope), vector_subtract(a->initial, b->initial)), 0, EPSILON) == 0;
+}
+
+int lp_intersection(Line* l, Plane* p)
 {
 	
 }
 
-Vector* lp_intersection(Line* l, Plane* p)
+int plane_intersection(Plane* a, Plane* b)
 {
+	if (vector_equals(a->perpendicular, b->perpendicular)
+		return 0;
+	if (vector_equals(a->perpendicular, invertNormal(b->perpendicular)))
+		return 0;
 	
+	return 1;
 }
 
-Vector* plane_intersection(Plane* a, Plane* b)
-{
-	
-}
-
-Vector* pv_intersection(const Line* l,  const Vector* v)
+int pv_intersection(const Line* l,  const Vector* v)
 {
 	Vector* x = vector_add(v, vector_multiply(-1, l->initial));
 	if (x->x/l->slope->x == x->y/l->slope->y &&  x->y/l->slope->y  == x->z/l->slope->z)
-		return vector_add(vector_multiply(x->x/l->slope->x, l->slope), l->initial);
-	return NULL;
+		return 0;
+	return 1;
 }
+
+int nearlyEqual(float a, float b, float epsilon) {
+		float absA = fabs(a);
+		float absB = fabs(b);
+		float diff = fabs(a - b);
+
+		if (a == b) { // shortcut, handles infinities
+			return true;
+		} else if (a == 0 || b == 0 || diff < FLT_MIN) {
+			// a or b is zero or both are extremely close to it
+			// relative error is less meaningful here
+			return diff < (epsilon * FLT_MIN);
+		} else { // use relative error
+			return diff / fmin((absA + absB), FLT_MAX) < epsilon;
+		}
+	}
 
 
 
